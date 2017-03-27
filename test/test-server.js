@@ -19,8 +19,11 @@ describe('Customers Service', () => {
 
 
     // Test the /GET route
-    describe('Given that there are no customers in the system', () => {
+    describe('List customers when system is empty', () => {
         var response;
+        it('Given that there are no customers in the system', (done) => {
+            done();
+        });
         it('When the client requests a list of customers', (done) => {
             chai.request(server)
                 .get('/customer')
@@ -36,6 +39,7 @@ describe('Customers Service', () => {
             done();
         });
     });
+
 
     // Test the /POST route
     describe('As a client I can add a customer to the system', () => {
@@ -72,7 +76,7 @@ describe('Customers Service', () => {
     });
 
     // Test the /GET route
-    describe('Given the system has one customer with name: "J.R.R. Tolkien", dob: "01/01/1984", gender: "Male"', () => {
+    describe('List customers given the system has one customer with name: "J.R.R. Tolkien", dob: "01/01/1984", gender: "Male"', () => {
         var response;
         beforeEach((done) => {
             let customer = {
@@ -124,7 +128,7 @@ describe('Customers Service', () => {
     });
 
     // Test the /GET/{id} route
-    describe('Given the system has one customer with name: "J.R.R. Tolkien", dob: "01/01/1984", gender: "Male"', () => {
+    describe('List specific customer given the system has one customer with name: "J.R.R. Tolkien", dob: "01/01/1984", gender: "Male"', () => {
         var response;
         var customerId;
         beforeEach((done) => {
