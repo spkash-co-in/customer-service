@@ -180,6 +180,84 @@ describe('Customers Service', () => {
         });
     });
 
+
+    describe('Update specific customer ', () => {
+        var response, getResponse;
+        var customerId;
+                beforeEach((done) => {
+            let customer = {
+                name: "J.R.R. Tolkien",
+                dob: "01/01/1984",
+                gender: "Male"
+            };
+            chai.request(server)
+                .post('/customer')
+                .send(customer)
+                .end((err, res) => {
+                    customerId = res.body.id;
+                    done();
+                });
+        });
+        it('Given the system has one customer with name: "J.R.R. Tolkien", dob: "01/01/1984", gender: "Male"', (done) => {
+            let customer = {
+                name: "J.R.R. Tolkien",
+                dob: "01/01/1984",
+                gender: "Male"
+            };
+            chai.request(server)
+                .post('/customer')
+                .send(customer)
+                .end((err, res) => {
+                    customerId = res.body.id;
+                    done();
+                });
+        });
+        it('When the client updates a customer by providing an id', (done) => {
+            let customer = {
+                name: "J.R.R. Tolkien",
+                dob: "01/01/1984",
+                gender: "Female"
+            };
+            chai.request(server)
+                .post('/customer/' + customerId)
+                .send(customer)
+                .end((err, res) => {
+                    response = res;
+                });
+            chai.request(server)
+                .get('/customer/' + customerId)
+                .end((err, res) => {
+                    getResponse = res;
+                });
+            done();
+        });
+        it('Then the response is a non-empty customer object', (done) => {
+            response.should.have.status(200);
+            response.body.should.be.a('object');
+            done();
+        });
+        it('And the customer should have attributes id, name, dob, gender', (done) => {
+            getResponse.body.should.have.property('id');
+            getResponse.body.should.have.property('name');
+            getResponse.body.should.have.property('dob');
+            getResponse.body.should.have.property('gender');
+            done();
+        });
+        it('And the customer should have non-null values for attributes id, name, dob, gender', (done) => {
+            getResponse.body.id.isNotNull;
+            getResponse.body.name.isNotNull;
+            getResponse.body.dob.isNotNull;
+            getResponse.body.gender.isNotNull;
+            done();
+        });
+        it('And the customer will have name: "J.R.R. Tolkien", dob: "01/01/1984", gender: "Female"', (done) => {
+            getResponse.body.name.should.be.eql('J.R.R. Tolkien');
+            getResponse.body.dob.should.be.eql('01/01/1984');
+            getResponse.body.gender.should.be.eql('Female');
+            done();
+        });
+    });
+
     // Test the /GET/{id} route
     describe('Customer Service will allow to delete a customer', () => {
         var response;
